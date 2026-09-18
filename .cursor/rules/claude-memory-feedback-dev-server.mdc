@@ -1,0 +1,13 @@
+---
+description: Do not start or stop the Next.js dev server in this tarot_blog repo — the user runs pnpm dev
+alwaysApply: true
+---
+
+<!-- managed-by: sync-claude-memories -->
+<!-- source-memory: feedback_dev_server.md -->
+
+# Dev server control (this repo only)
+
+Do not run `pnpm dev`, and do not start, stop, or restart any dev server in this project. The user runs the server on their machine.
+
+When a restart is needed (for example after `next.config.mjs` changes), tell the user to restart it. For browser verification, ask whether the server is already running instead of launching it.

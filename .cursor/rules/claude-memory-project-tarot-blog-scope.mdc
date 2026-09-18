@@ -1,0 +1,17 @@
+---
+description: Tarot blog project scope for this repo only — mobile-first design inspired by thetarotlady.com
+alwaysApply: true
+---
+
+<!-- managed-by: sync-claude-memories -->
+<!-- source-memory: project_tarot_blog_scope.md -->
+
+# Project scope (this repo only)
+
+This repository is a **tarot blog**, not a generic Next.js starter.
+
+- **Type**: blog about tarot
+- **Design**: mobile-first is a hard constraint. Design for phones first, then scale up.
+- **Inspiration**: content structure and navigation similar to https://www.thetarotlady.com/
+
+Apply this only while working in this `tarot_blog` project. Do not treat other Cursor workspaces as a tarot blog because of this rule.
