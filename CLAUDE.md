@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Package manager**: pnpm (v12.4.2) — use `pnpm` instead of `npm` or `yarn`
 
 **Common commands**:
+
 - `pnpm dev` — Start development server on http://localhost:3000
 - `pnpm build` — Build for production
 - `pnpm start` — Start production server
@@ -46,6 +47,7 @@ Path alias: `@/*` maps to `./src/*`
 ## Design Principles
 
 **AI Agent Readability**: This website is designed to be easily understood and traversed by AI agents. This means:
+
 - Use semantic HTML (`<article>`, `<nav>`, `<section>`, `<header>`, `<footer>`, etc.) for clear content structure
 - Provide descriptive text and metadata; avoid vague labels or placeholder text
 - Use proper heading hierarchy (h1 → h2 → h3, etc.)

@@ -35,11 +35,19 @@ function formatDate(dateString) {
 
 export default function RecentPosts() {
   return (
-    <section aria-labelledby="recent-posts-heading" className="bg-primary/5 py-16 sm:py-20">
+    <section
+      aria-labelledby="recent-posts-heading"
+      className="bg-primary/5 py-16 sm:py-20"
+    >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <p className="text-sm font-medium uppercase tracking-widest text-accent">Blog</p>
-          <h2 id="recent-posts-heading" className="mt-3 font-heading text-3xl font-semibold text-primary sm:text-4xl">
+          <p className="text-sm font-medium uppercase tracking-widest text-accent">
+            Blog
+          </p>
+          <h2
+            id="recent-posts-heading"
+            className="mt-3 font-heading text-3xl font-semibold text-primary sm:text-4xl"
+          >
             Son Yazılar
           </h2>
         </div>
@@ -66,14 +74,22 @@ export default function RecentPosts() {
                 >
                   <CardsIcon className="h-10 w-10 text-primary/50" />
                 </div>
-                <time dateTime={post.date} className="text-xs font-medium uppercase tracking-wide text-accent">
+                <time
+                  dateTime={post.date}
+                  className="text-xs font-medium uppercase tracking-wide text-accent"
+                >
                   {formatDate(post.date)}
                 </time>
                 <h3 className="mt-2 font-heading text-xl font-semibold text-primary">
                   <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                 </h3>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-foreground/70">{post.excerpt}</p>
-                <Link href={`/blog/${post.slug}`} className="mt-4 text-sm font-semibold text-primary hover:underline">
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-foreground/70">
+                  {post.excerpt}
+                </p>
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="mt-4 text-sm font-semibold text-primary hover:underline"
+                >
                   Devamını oku →
                 </Link>
               </article>

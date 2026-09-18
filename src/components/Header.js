@@ -61,7 +61,11 @@ export default function Header() {
           Tarot Falı
         </Link>
 
-        <nav aria-label="Ana menü" className="hidden md:flex" ref={desktopNavRef}>
+        <nav
+          aria-label="Ana menü"
+          className="hidden md:flex"
+          ref={desktopNavRef}
+        >
           <ul className="flex items-center gap-6">
             {NAV_ITEMS.map((item) => (
               <li key={item.label} className="relative">
@@ -73,7 +77,9 @@ export default function Header() {
                       aria-expanded={openDesktopMenu === item.label}
                       aria-haspopup="true"
                       onClick={() =>
-                        setOpenDesktopMenu((current) => (current === item.label ? null : item.label))
+                        setOpenDesktopMenu((current) =>
+                          current === item.label ? null : item.label
+                        )
                       }
                     >
                       {item.label}
@@ -135,7 +141,11 @@ export default function Header() {
       </div>
 
       {mobileMenuOpen && (
-        <nav id="mobile-menu" aria-label="Mobil menü" className="border-t border-primary/10 bg-background md:hidden">
+        <nav
+          id="mobile-menu"
+          aria-label="Mobil menü"
+          className="border-t border-primary/10 bg-background md:hidden"
+        >
           <ul className="flex flex-col gap-1 px-4 py-4">
             {NAV_ITEMS.map((item) => (
               <li key={item.label}>
@@ -146,7 +156,9 @@ export default function Header() {
                       className="flex w-full items-center justify-between rounded-lg px-3 py-3 text-left text-base font-medium text-foreground/90"
                       aria-expanded={openMobileSection === item.label}
                       onClick={() =>
-                        setOpenMobileSection((current) => (current === item.label ? null : item.label))
+                        setOpenMobileSection((current) =>
+                          current === item.label ? null : item.label
+                        )
                       }
                     >
                       {item.label}

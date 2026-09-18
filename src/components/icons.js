@@ -16,8 +16,21 @@ export function StarIcon(props) {
 
 export function CardsIcon(props) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} {...props}>
-      <rect x="3" y="6" width="10" height="15" rx="1.5" transform="rotate(-8 8 13.5)" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      {...props}
+    >
+      <rect
+        x="3"
+        y="6"
+        width="10"
+        height="15"
+        rx="1.5"
+        transform="rotate(-8 8 13.5)"
+      />
       <rect x="9" y="4" width="10" height="15" rx="1.5" />
     </svg>
   );

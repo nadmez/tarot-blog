@@ -3,16 +3,24 @@ import { MoonIcon, StarIcon } from "./icons";
 
 export default function Hero() {
   return (
-    <section aria-labelledby="hero-heading" className="overflow-hidden bg-gradient-to-b from-primary/5 to-background">
+    <section
+      aria-labelledby="hero-heading"
+      className="overflow-hidden bg-gradient-to-b from-primary/5 to-background"
+    >
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:items-center md:py-24 lg:px-8">
         <div className="flex flex-col gap-6 text-center md:text-left">
-          <p className="text-sm font-medium uppercase tracking-widest text-accent">Sezgisel Rehberlik</p>
-          <h1 id="hero-heading" className="font-heading text-4xl font-semibold leading-tight text-primary sm:text-5xl">
+          <p className="text-sm font-medium uppercase tracking-widest text-accent">
+            Sezgisel Rehberlik
+          </p>
+          <h1
+            id="hero-heading"
+            className="font-heading text-4xl font-semibold leading-tight text-primary sm:text-5xl"
+          >
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           </h1>
           <p className="text-lg leading-relaxed text-foreground/70">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-center md:justify-start">
             <Link

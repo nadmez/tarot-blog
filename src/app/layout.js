@@ -28,7 +28,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="tr" className={`${playfairDisplay.variable} ${inter.variable} antialiased`}>
+    <html
+      lang="tr"
+      className={`${playfairDisplay.variable} ${inter.variable} antialiased`}
+    >
       <body className="flex min-h-screen flex-col bg-background text-foreground">
         <Header />
         <main className="flex-1">{children}</main>
