@@ -17,6 +17,13 @@ export const metadata = {
   title: "Tarot Falı | Sezgisel Tarot Okumaları ve Rehberlik",
   description:
     "Tarot kartları, açılımlar ve sezgisel okumalar üzerine rehberlik, açılım kılavuzları ve blog yazıları.",
+  openGraph: {
+    title: "Tarot Falı | Sezgisel Tarot Okumaları ve Rehberlik",
+    description:
+      "Tarot kartları, açılımlar ve sezgisel okumalar üzerine rehberlik, açılım kılavuzları ve blog yazıları.",
+    locale: "tr_TR",
+    siteName: "Tarot Falı",
+  },
 };
 
 export default function RootLayout({ children }) {
