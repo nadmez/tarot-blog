@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { expect, test } from "vitest";
-import Hero from "./Hero";
+import Hero from ".";
 
 test("renders the hero heading and primary actions", () => {
   render(<Hero />);

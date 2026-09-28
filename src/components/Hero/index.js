@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MoonIcon, StarIcon } from "./icons";
+import { MoonIcon, StarIcon } from "../icons";
 
 export default function Hero() {
   return (

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ChevronIcon, CloseIcon, MenuIcon, MoonIcon } from "./icons";
+import { ChevronIcon, CloseIcon, MenuIcon, MoonIcon } from "../icons";
 
 const NAV_ITEMS = [
   { label: "Ana Sayfa", href: "/" },

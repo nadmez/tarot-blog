@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CardsIcon } from "./icons";
+import { CardsIcon } from "../icons";
 
 const POSTS = [
   {
