@@ -1,11 +1,13 @@
 import { render } from "@testing-library/react";
 import { expect, test } from "vitest";
 import {
+  ArrowUpIcon,
   CardsIcon,
   ChevronIcon,
   CloseIcon,
   MenuIcon,
   MoonIcon,
+  QuestionIcon,
   StarIcon,
 } from ".";
 
@@ -16,6 +18,8 @@ const ICONS = [
   { name: "ChevronIcon", Icon: ChevronIcon },
   { name: "MenuIcon", Icon: MenuIcon },
   { name: "CloseIcon", Icon: CloseIcon },
+  { name: "QuestionIcon", Icon: QuestionIcon },
+  { name: "ArrowUpIcon", Icon: ArrowUpIcon },
 ];
 
 test.each(ICONS)("$name renders an svg element", ({ Icon }) => {

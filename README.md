@@ -20,6 +20,17 @@ You can start editing the page by modifying `app/page.js`. The page auto-updates
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Tarot chat (`/tarot`)
+
+The `/tarot` page talks to the separate Express server in `tarot-chat/packages/server`. Next.js rewrites `/api/*` to that server, so start it on a port other than 3000 (which `next dev` uses):
+
+```bash
+# in tarot-chat/packages/server
+PORT=3001 npm run dev
+```
+
+The default target is `http://localhost:3001`. Set `TAROT_API_URL` (for example in `.env.local`) to point somewhere else.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

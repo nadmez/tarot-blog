@@ -1,0 +1,38 @@
+---
+description: When writing or changing code, follow Karpathy-style discipline (simplicity, surgical diffs, verifiable goals)
+alwaysApply: true
+---
+
+# Karpathy coding guidelines (this repo)
+
+Any agent that **implements or edits production code** in this project must follow these
+principles, distilled from [Andrej Karpathy's notes on LLM coding](https://x.com/karpathy/status/2015883857489522876)
+and the [karpathy-guidelines](https://github.com/multica-ai/andrej-karpathy-skills/blob/main/skills/karpathy-guidelines/SKILL.md)
+skill. Bias toward caution over speed; use judgment on trivial one-liners.
+
+## Think before coding
+
+- State assumptions explicitly; if uncertain, ask instead of guessing.
+- When multiple interpretations exist, surface them and tradeoffs—do not pick silently.
+- If something is unclear or inconsistent with the codebase, stop and name it before coding.
+
+## Simplicity first
+
+- Ship the **minimum** code that satisfies the request—no speculative features, flags, or
+  “future-proof” abstractions.
+- No helpers or layers used only once; no error handling for impossible cases.
+- If the diff is much larger than the problem warrants, simplify before finishing.
+
+## Surgical changes
+
+- Touch only what the task requires; do not “improve” adjacent code, comments, or formatting.
+- Match existing conventions in the file and project.
+- Remove orphans **your** change created (unused imports, dead branches); do not delete
+  pre-existing dead code unless asked.
+- Every changed line should trace to the user's request.
+
+## Goal-driven execution
+
+- Turn work into **verifiable** success criteria (tests, lint, build, or explicit checks).
+- For bugs and features, prefer reproduce → fix → verify over “should work now.”
+- Run the relevant project commands (`pnpm test`, `pnpm lint`, etc.) before claiming done.
