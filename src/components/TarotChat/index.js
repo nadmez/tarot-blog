@@ -16,7 +16,7 @@ function playSound(src) {
 
 export default function TarotChat() {
   const [turns, setTurns] = useState([]);
-  const [cards, setCards] = useState([]);
+  const [activeTurn, setActiveTurn] = useState(0);
   const conversationId = useRef(null);
 
   const lastTurn = turns.at(-1);
@@ -29,9 +29,9 @@ export default function TarotChat() {
     const index = turns.length;
     setTurns((previous) => [
       ...previous,
-      { question: prompt, answer: null, error: null },
+      { question: prompt, answer: null, error: null, cards: [] },
     ]);
-    setCards([]);
+    setActiveTurn(index);
     playSound("/sounds/pop.mp3");
     conversationId.current ??= crypto.randomUUID();
 
@@ -53,10 +53,11 @@ export default function TarotChat() {
       }
       setTurns((previous) =>
         previous.map((turn, i) =>
-          i === index ? { ...turn, answer: data.message } : turn
+          i === index
+            ? { ...turn, answer: data.message, cards: data.cards ?? [] }
+            : turn
         )
       );
-      setCards(data.cards ?? []);
       playSound("/sounds/notification.mp3");
     } catch (caught) {
       console.error(caught);
@@ -70,8 +71,8 @@ export default function TarotChat() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4">
-      <CardSpread cards={cards} />
-      <ChatMessages turns={turns} />
+      <CardSpread cards={turns[activeTurn]?.cards ?? []} />
+      <ChatMessages turns={turns} onActiveTurnChange={setActiveTurn} />
       <ChatInput onSubmit={handleSubmit} isLoading={isBotTyping} />
     </div>
   );

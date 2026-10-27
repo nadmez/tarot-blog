@@ -26,6 +26,24 @@ const CARDS = [
   },
 ];
 
+const OTHER_CARDS = [
+  {
+    name: "The Moon",
+    name_short: "ar18",
+    image_url: "/assets/images/themoon.jpeg",
+  },
+  {
+    name: "The Star",
+    name_short: "ar17",
+    image_url: "/assets/images/thestar.jpeg",
+  },
+  {
+    name: "The Tower",
+    name_short: "ar16",
+    image_url: "/assets/images/thetower.jpeg",
+  },
+];
+
 const ERROR_TEXT = "Bir şeyler ters gitti. Lütfen daha sonra tekrar deneyin.";
 
 function okResponse(body) {
@@ -38,6 +56,32 @@ function ask(text) {
   });
   fireEvent.click(screen.getByRole("button", { name: "Gönder" }));
 }
+
+function stubTurnOffsets(step) {
+  vi.spyOn(HTMLElement.prototype, "offsetTop", "get").mockImplementation(
+    function () {
+      return this.tagName === "ARTICLE"
+        ? [...this.parentElement.children].indexOf(this) * step
+        : 0;
+    }
+  );
+}
+
+function scrollPaneTo(top) {
+  const log = screen.getByRole("log");
+  log.scrollTop = top;
+  fireEvent.scroll(log);
+}
+
+async function askAndWait(text, reply) {
+  ask(text);
+  await screen.findByText(reply);
+  await waitFor(() =>
+    expect(screen.getByLabelText("Sorunuzu yazın")).toBeEnabled()
+  );
+}
+
+const cardArea = () => screen.getByRole("region", { name: "Çekilen kartlar" });
 
 let played;
 
@@ -59,6 +103,7 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 test("starts with three card placeholders and no messages", () => {
@@ -251,4 +296,127 @@ test("shows the typing indicator inside the pending question's turn", async () =
   expect(
     await within(article).findByRole("status", { name: "Yanıt yazılıyor" })
   ).toBeInTheDocument();
+});
+
+test("shows the cards of the question scrolled to the top of the pane", async () => {
+  stubTurnOffsets(400);
+  vi.stubGlobal(
+    "fetch",
+    vi
+      .fn()
+      .mockResolvedValueOnce(okResponse({ message: "Yanıt 1", cards: CARDS }))
+      .mockResolvedValueOnce(
+        okResponse({ message: "Yanıt 2", cards: OTHER_CARDS })
+      )
+  );
+  render(<TarotChat />);
+
+  await askAndWait("Soru 1", "Yanıt 1");
+  await askAndWait("Soru 2", "Yanıt 2");
+  expect(
+    within(cardArea()).getByRole("img", { name: "The Moon" })
+  ).toBeInTheDocument();
+
+  scrollPaneTo(0);
+  expect(
+    within(cardArea()).getByRole("img", { name: "The Magician" })
+  ).toBeInTheDocument();
+  expect(
+    within(cardArea()).queryByRole("img", { name: "The Moon" })
+  ).not.toBeInTheDocument();
+
+  scrollPaneTo(400);
+  expect(
+    within(cardArea()).getByRole("img", { name: "The Moon" })
+  ).toBeInTheDocument();
+  expect(
+    within(cardArea()).queryByRole("img", { name: "The Magician" })
+  ).not.toBeInTheDocument();
+});
+
+test("keeps the earlier question's cards when a newer answer arrives while scrolled up", async () => {
+  stubTurnOffsets(400);
+  let resolveSecond;
+  vi.stubGlobal(
+    "fetch",
+    vi
+      .fn()
+      .mockResolvedValueOnce(okResponse({ message: "Yanıt 1", cards: CARDS }))
+      .mockReturnValueOnce(
+        new Promise((resolve) => {
+          resolveSecond = resolve;
+        })
+      )
+  );
+  render(<TarotChat />);
+
+  await askAndWait("Soru 1", "Yanıt 1");
+  ask("Soru 2");
+  scrollPaneTo(0);
+  resolveSecond(okResponse({ message: "Yanıt 2", cards: OTHER_CARDS }));
+  await screen.findByText("Yanıt 2");
+
+  expect(
+    within(cardArea()).getByRole("img", { name: "The Magician" })
+  ).toBeInTheDocument();
+  expect(
+    within(cardArea()).queryByRole("img", { name: "The Moon" })
+  ).not.toBeInTheDocument();
+
+  scrollPaneTo(400);
+  expect(
+    within(cardArea()).getByRole("img", { name: "The Moon" })
+  ).toBeInTheDocument();
+});
+
+test("shows placeholders when a failed question is scrolled back to the top", async () => {
+  stubTurnOffsets(400);
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  vi.stubGlobal(
+    "fetch",
+    vi
+      .fn()
+      .mockRejectedValueOnce(new Error("network"))
+      .mockResolvedValueOnce(okResponse({ message: "Yanıt 2", cards: CARDS }))
+  );
+  render(<TarotChat />);
+
+  ask("Soru 1");
+  expect(await screen.findByRole("alert")).toBeInTheDocument();
+  expect(screen.getAllByText("Kart henüz çekilmedi")).toHaveLength(3);
+  await askAndWait("Soru 2", "Yanıt 2");
+
+  scrollPaneTo(0);
+  expect(screen.getAllByText("Kart henüz çekilmedi")).toHaveLength(3);
+  expect(within(cardArea()).queryByRole("img")).not.toBeInTheDocument();
+});
+
+test.each([
+  ["an empty card list", { message: "Yanıt", cards: [] }],
+  ["no card list", { message: "Yanıt" }],
+])("shows placeholders for an answer with %s", async (_, body) => {
+  vi.stubGlobal("fetch", vi.fn().mockResolvedValue(okResponse(body)));
+  render(<TarotChat />);
+
+  await askAndWait("Soru", "Yanıt");
+
+  expect(screen.getAllByText("Kart henüz çekilmedi")).toHaveLength(3);
+});
+
+test("shows exactly three cards when two questions drew the same cards", async () => {
+  stubTurnOffsets(400);
+  vi.stubGlobal(
+    "fetch",
+    vi
+      .fn()
+      .mockResolvedValueOnce(okResponse({ message: "Yanıt 1", cards: CARDS }))
+      .mockResolvedValueOnce(okResponse({ message: "Yanıt 2", cards: CARDS }))
+  );
+  render(<TarotChat />);
+
+  await askAndWait("Soru 1", "Yanıt 1");
+  await askAndWait("Soru 2", "Yanıt 2");
+  scrollPaneTo(0);
+
+  expect(within(cardArea()).getAllByRole("img")).toHaveLength(3);
 });
