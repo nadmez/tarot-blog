@@ -20,8 +20,20 @@ function copySelectionAsPlainText(event) {
 const bubbleClasses = (role) =>
   `max-w-[85%] rounded-2xl px-4 py-2 text-sm leading-relaxed [&_ol]:list-decimal [&_ol]:pl-5 [&_p+p]:mt-2 [&_ul]:list-disc [&_ul]:pl-5 ${BUBBLE_STYLES[role]}`;
 
-export default function ChatMessages({ turns = [] }) {
+export default function ChatMessages({ turns = [], onActiveTurnChange }) {
   const logRef = useRef(null);
+
+  function handleScroll(event) {
+    const pane = event.currentTarget;
+    const { scrollTop, children } = pane;
+    let index = 0;
+    for (let i = 0; i < children.length; i++) {
+      if (children[i].offsetTop <= scrollTop + 1) {
+        index = i;
+      }
+    }
+    onActiveTurnChange?.(index);
+  }
 
   useEffect(() => {
     const pane = logRef.current;
@@ -39,6 +51,7 @@ export default function ChatMessages({ turns = [] }) {
         aria-live="polite"
         aria-label="Sohbet mesajları"
         className="absolute inset-0 flex min-h-48 flex-col gap-3 overflow-y-auto scroll-smooth rounded-3xl border border-primary/10 bg-background px-4 pb-4"
+        onScroll={handleScroll}
       >
         {turns.map((turn, index) => (
           <article

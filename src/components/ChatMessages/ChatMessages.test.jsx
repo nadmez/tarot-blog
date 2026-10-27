@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, expect, test, vi } from "vitest";
 import ChatMessages from ".";
 
@@ -140,4 +140,49 @@ test("keeps the scroll position when the latest answer arrives", () => {
 
   expect(screen.getByText("Yeni yanıt")).toBeInTheDocument();
   expect(log.scrollTop).toBe(120);
+});
+
+const THREE_TURNS = [
+  { question: "Bir", answer: "Yanıt bir", error: null },
+  { question: "İki", answer: "Yanıt iki", error: null },
+  { question: "Üç", answer: "Yanıt üç", error: null },
+];
+
+test("reports the turn at the top of the pane when it scrolls", () => {
+  stubTurnOffsets(400);
+  const onActiveTurnChange = vi.fn();
+  render(
+    <ChatMessages turns={THREE_TURNS} onActiveTurnChange={onActiveTurnChange} />
+  );
+  const log = screen.getByRole("log");
+
+  log.scrollTop = 450;
+  fireEvent.scroll(log);
+  expect(onActiveTurnChange).toHaveBeenLastCalledWith(1);
+
+  log.scrollTop = 0;
+  fireEvent.scroll(log);
+  expect(onActiveTurnChange).toHaveBeenLastCalledWith(0);
+
+  log.scrollTop = 799;
+  fireEvent.scroll(log);
+  expect(onActiveTurnChange).toHaveBeenLastCalledWith(2);
+
+  log.scrollTop = 798;
+  fireEvent.scroll(log);
+  expect(onActiveTurnChange).toHaveBeenLastCalledWith(1);
+});
+
+test("reports the first turn when scrolled with no turns", () => {
+  const onActiveTurnChange = vi.fn();
+  render(<ChatMessages turns={[]} onActiveTurnChange={onActiveTurnChange} />);
+
+  fireEvent.scroll(screen.getByRole("log"));
+
+  expect(onActiveTurnChange).toHaveBeenLastCalledWith(0);
+});
+
+test("scrolls without a change handler", () => {
+  render(<ChatMessages turns={THREE_TURNS} />);
+  expect(() => fireEvent.scroll(screen.getByRole("log"))).not.toThrow();
 });
