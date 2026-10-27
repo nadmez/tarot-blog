@@ -7,6 +7,15 @@ test("has Turkish page metadata", () => {
   expect(metadata.description).toMatch(/tarot/i);
 });
 
+test("fills the viewport below the site header so the chat pane takes the rest", () => {
+  render(<TarotPage />);
+  expect(screen.getByRole("region", { name: "Tarot Okuması" })).toHaveClass(
+    "min-h-[calc(100dvh-73px)]",
+    "flex",
+    "flex-col"
+  );
+});
+
 test("renders the page heading followed by the tarot chat", () => {
   render(<TarotPage />);
 
