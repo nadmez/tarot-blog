@@ -48,6 +48,9 @@ export default function TarotChat() {
         throw new Error(`Chat request failed with status ${response.status}`);
       }
       const data = await response.json();
+      if (typeof data.message !== "string") {
+        throw new Error("Chat response has no message");
+      }
       setTurns((previous) =>
         previous.map((turn, i) =>
           i === index ? { ...turn, answer: data.message } : turn

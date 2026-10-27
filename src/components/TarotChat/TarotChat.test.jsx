@@ -183,6 +183,26 @@ test("treats a non-OK server response as an error", async () => {
   expect(await screen.findByRole("alert")).toHaveTextContent(ERROR_TEXT);
 });
 
+test.each([
+  ["message is null", { message: null, cards: [] }],
+  ["message field is missing", { cards: [] }],
+])(
+  "shows an error when the server responds OK but %s",
+  async (_label, body) => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(okResponse(body)));
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    render(<TarotChat />);
+
+    ask("Soru");
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(ERROR_TEXT);
+    expect(
+      screen.queryByRole("status", { name: "Yanıt yazılıyor" })
+    ).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Sorunuzu yazın")).toBeEnabled();
+  }
+);
+
 test("plays a pop sound when sending and a notification sound on reply", async () => {
   vi.stubGlobal(
     "fetch",
