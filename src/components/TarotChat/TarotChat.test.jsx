@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import TarotChat from ".";
 
@@ -189,4 +195,40 @@ test("plays a pop sound when sending and a notification sound on reply", async (
 
   await screen.findByText("Yanıt");
   expect(played).toEqual(["/sounds/pop.mp3", "/sounds/notification.mp3"]);
+});
+
+test("keeps the error inside the failed question's turn after asking again", async () => {
+  vi.stubGlobal(
+    "fetch",
+    vi
+      .fn()
+      .mockRejectedValueOnce(new Error("network"))
+      .mockResolvedValueOnce(okResponse({ message: "Yanıt", cards: CARDS }))
+  );
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  render(<TarotChat />);
+
+  ask("Soru 1");
+  await screen.findByRole("alert");
+  ask("Soru 2");
+  await screen.findByText("Yanıt");
+
+  const [failed, answered] = screen.getAllByRole("article");
+  expect(within(failed).getByText("Soru 1")).toBeInTheDocument();
+  expect(within(failed).getByRole("alert")).toHaveTextContent(ERROR_TEXT);
+  expect(within(answered).queryByRole("alert")).not.toBeInTheDocument();
+  expect(within(answered).getByText("Yanıt")).toBeInTheDocument();
+});
+
+test("shows the typing indicator inside the pending question's turn", async () => {
+  vi.stubGlobal("fetch", vi.fn().mockReturnValue(new Promise(() => {})));
+  render(<TarotChat />);
+
+  ask("Soru");
+
+  const article = screen.getByRole("article");
+  expect(within(article).getByText("Soru")).toBeInTheDocument();
+  expect(
+    await within(article).findByRole("status", { name: "Yanıt yazılıyor" })
+  ).toBeInTheDocument();
 });

@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import CardSpread from "../CardSpread";
 import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";
-import TypingIndicator from "../TypingIndicator";
 
 const ERROR_MESSAGE =
   "Bir şeyler ters gitti. Lütfen daha sonra tekrar deneyin.";
@@ -16,16 +15,22 @@ function playSound(src) {
 }
 
 export default function TarotChat() {
-  const [messages, setMessages] = useState([]);
+  const [turns, setTurns] = useState([]);
   const [cards, setCards] = useState([]);
-  const [isBotTyping, setIsBotTyping] = useState(false);
-  const [error, setError] = useState(null);
   const conversationId = useRef(null);
 
+  const lastTurn = turns.at(-1);
+  const isBotTyping =
+    lastTurn !== undefined &&
+    lastTurn.answer === null &&
+    lastTurn.error === null;
+
   async function handleSubmit(prompt) {
-    setMessages((previous) => [...previous, { role: "user", content: prompt }]);
-    setIsBotTyping(true);
-    setError(null);
+    const index = turns.length;
+    setTurns((previous) => [
+      ...previous,
+      { question: prompt, answer: null, error: null },
+    ]);
     setCards([]);
     playSound("/sounds/pop.mp3");
     conversationId.current ??= crypto.randomUUID();
@@ -43,32 +48,27 @@ export default function TarotChat() {
         throw new Error(`Chat request failed with status ${response.status}`);
       }
       const data = await response.json();
-      setMessages((previous) => [
-        ...previous,
-        { role: "bot", content: data.message },
-      ]);
+      setTurns((previous) =>
+        previous.map((turn, i) =>
+          i === index ? { ...turn, answer: data.message } : turn
+        )
+      );
       setCards(data.cards ?? []);
       playSound("/sounds/notification.mp3");
     } catch (caught) {
       console.error(caught);
-      setError(ERROR_MESSAGE);
-    } finally {
-      setIsBotTyping(false);
+      setTurns((previous) =>
+        previous.map((turn, i) =>
+          i === index ? { ...turn, error: ERROR_MESSAGE } : turn
+        )
+      );
     }
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex min-h-0 flex-1 flex-col gap-4">
       <CardSpread cards={cards} />
-      <div className="flex flex-col gap-3">
-        <ChatMessages messages={messages} />
-        {isBotTyping && <TypingIndicator />}
-        {error && (
-          <p role="alert" className="px-2 text-sm text-red-700">
-            {error}
-          </p>
-        )}
-      </div>
+      <ChatMessages turns={turns} />
       <ChatInput onSubmit={handleSubmit} isLoading={isBotTyping} />
     </div>
   );
