@@ -1,6 +1,18 @@
 import { render, screen, within } from "@testing-library/react";
-import { expect, test } from "vitest";
+import { afterEach, expect, test, vi } from "vitest";
 import ChatMessages from ".";
+
+afterEach(() => vi.restoreAllMocks());
+
+function stubTurnOffsets(step) {
+  vi.spyOn(HTMLElement.prototype, "offsetTop", "get").mockImplementation(
+    function () {
+      return this.tagName === "ARTICLE"
+        ? [...this.parentElement.children].indexOf(this) * step
+        : 0;
+    }
+  );
+}
 
 const TURNS = [
   {
@@ -105,4 +117,27 @@ test("is a positioned scroll pane inside a wrapper that fills the remaining heig
   const log = screen.getByRole("log");
   expect(log).toHaveClass("absolute", "inset-0", "overflow-y-auto", "min-h-48");
   expect(log.parentElement).toHaveClass("relative", "flex-1", "min-h-48");
+});
+
+test("scrolls a newly added turn to the top of the pane", () => {
+  stubTurnOffsets(400);
+  const { rerender } = render(<ChatMessages turns={[TURNS[0]]} />);
+
+  rerender(<ChatMessages turns={TURNS} />);
+
+  expect(screen.getByRole("log").scrollTop).toBe(400);
+});
+
+test("keeps the scroll position when the latest answer arrives", () => {
+  stubTurnOffsets(400);
+  const { rerender } = render(<ChatMessages turns={TURNS} />);
+  const log = screen.getByRole("log");
+  log.scrollTop = 120;
+
+  rerender(
+    <ChatMessages turns={[TURNS[0], { ...TURNS[1], answer: "Yeni yanıt" }]} />
+  );
+
+  expect(screen.getByText("Yeni yanıt")).toBeInTheDocument();
+  expect(log.scrollTop).toBe(120);
 });

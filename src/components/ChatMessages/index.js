@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import TypingIndicator from "../TypingIndicator";
 
@@ -22,6 +22,14 @@ const bubbleClasses = (role) =>
 
 export default function ChatMessages({ turns = [] }) {
   const logRef = useRef(null);
+
+  useEffect(() => {
+    const pane = logRef.current;
+    const last = pane?.lastElementChild;
+    if (last) {
+      pane.scrollTop = last.offsetTop;
+    }
+  }, [turns.length]);
 
   return (
     <div className="relative min-h-48 flex-1">
