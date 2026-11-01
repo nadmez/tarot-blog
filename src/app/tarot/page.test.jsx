@@ -7,27 +7,37 @@ test("has Turkish page metadata", () => {
   expect(metadata.description).toMatch(/tarot/i);
 });
 
+const INTRO = "Sorunuzu yazın; üç kart çekelim ve birlikte yorumlayalım.";
+
 test("fills the viewport below the site header so the chat pane takes the rest", () => {
   render(<TarotPage />);
-  expect(screen.getByRole("region", { name: "Tarot Okuması" })).toHaveClass(
+  expect(screen.getByRole("region", { name: INTRO })).toHaveClass(
     "min-h-[calc(100dvh-73px)]",
     "flex",
     "flex-col"
   );
 });
 
-test("renders the page heading followed by the tarot chat", () => {
+test("shows the intro in the accent label style and no page heading", () => {
   render(<TarotPage />);
 
-  const heading = screen.getByRole("heading", {
-    level: 1,
-    name: "Tarot Okuması",
-  });
+  const intro = screen.getByText(INTRO);
+  expect(intro).toHaveClass(
+    "text-sm",
+    "font-medium",
+    "uppercase",
+    "tracking-widest",
+    "text-accent"
+  );
+  expect(screen.queryByText("Sezgisel Rehberlik")).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole("heading", { name: "Tarot Okuması" })
+  ).not.toBeInTheDocument();
+
   const cards = screen.getByRole("region", { name: "Çekilen kartlar" });
   const input = screen.getByLabelText("Sorunuzu yazın");
-
   expect(
-    heading.compareDocumentPosition(cards) & Node.DOCUMENT_POSITION_FOLLOWING
+    intro.compareDocumentPosition(cards) & Node.DOCUMENT_POSITION_FOLLOWING
   ).toBeTruthy();
   expect(
     cards.compareDocumentPosition(input) & Node.DOCUMENT_POSITION_FOLLOWING

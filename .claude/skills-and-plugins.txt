@@ -1,0 +1,61 @@
+CLAUDE SKILLS AND PLUGINS INSTALLED ON THE ORIGINAL COMPUTER
+=============================================================
+Snapshot date: 2026-11-01
+
+Use this file to set up another computer. Local skills are already copied into
+.claude/skills/ in this project and load automatically when Claude Code is
+opened in this folder. Plugins must be installed on the new computer.
+
+
+1. LOCAL SKILLS (copied to .claude/skills/)
+-------------------------------------------
+Original location: ~/.claude/skills/ (user scope, available in every project)
+
+- find-docs            Fetches up-to-date library/framework docs (uses the ctx7 CLI: npx ctx7@latest)
+- karpathy-guidelines  Coding behavior guidelines (think first, simplicity, surgical changes, goal-driven)
+                       Source: https://github.com/multica-ai/andrej-karpathy-skills (CLAUDE.md)
+- playwright-tester    Playwright UI tests (includes evals/evals.json). Run only when the user invokes it.
+- spec-writer          Writes testable specs for the TDD pipeline. Use only when explicitly asked.
+- tdd-pipeline         Role-separated TDD (test-writer / code-writer / PM subagents).
+
+To make them global on the new computer, copy the folders to ~/.claude/skills/
+(Windows: %USERPROFILE%\.claude\skills\).
+
+
+2. PLUGINS (install on the new computer)
+----------------------------------------
+Marketplace: claude-plugins-official   Scope: user   All enabled
+
+- frontend-design@claude-plugins-official   version 41f619d61b99
+- superpowers@claude-plugins-official       version 7.0.0
+- skill-creator@claude-plugins-official     version 41f619d61b99
+
+Install inside Claude Code:
+
+  /plugin install frontend-design@claude-plugins-official
+  /plugin install superpowers@claude-plugins-official
+  /plugin install skill-creator@claude-plugins-official
+
+Skills provided by these plugins:
+
+  frontend-design:  frontend-design:frontend-design
+  skill-creator:    skill-creator:skill-creator
+  superpowers:      brainstorming, diagnosing-superpowers, dispatching-parallel-agents,
+                    executing-plans, finishing-a-development-branch, receiving-code-review,
+                    requesting-code-review, subagent-driven-development, systematic-debugging,
+                    test-driven-development, using-git-worktrees, using-superpowers,
+                    verification-before-completion, writing-plans, writing-skills
+
+
+3. BUILT-IN SKILLS (nothing to install)
+---------------------------------------
+code-review, simplify, security-review, init, loop, run, claude-api, workflow-authoring,
+dataviz, plugin-authoring, update-config, keybindings-help, fewer-permission-prompts
+
+
+4. NOT COPIED (separate from skills)
+------------------------------------
+- ~/.claude/rules/context7.md, git-and-tdd.md, karpathy-guidelines.md (global instruction rules)
+- ~/.claude/settings.json (permissions, model, enabledPlugins)
+- Project memory in ~/.claude/projects/.../memory/
+Copy those by hand if you want the same behavior on the new computer.

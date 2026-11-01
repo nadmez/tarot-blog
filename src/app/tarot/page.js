@@ -12,17 +12,11 @@ export default function TarotPage() {
       aria-labelledby="tarot-heading"
       className="mx-auto flex min-h-[calc(100dvh-73px)] max-w-3xl flex-col gap-6 px-4 py-4 sm:px-6 md:py-14"
     >
-      <header className="flex flex-col gap-2 text-center">
-        <p className="text-sm font-medium uppercase tracking-widest text-accent">
-          Sezgisel Rehberlik
-        </p>
-        <h1
+      <header className="text-center">
+        <p
           id="tarot-heading"
-          className="font-heading text-3xl font-semibold text-primary sm:text-4xl"
+          className="text-sm font-medium uppercase tracking-widest text-accent"
         >
-          Tarot Okuması
-        </h1>
-        <p className="text-foreground/70">
           Sorunuzu yazın; üç kart çekelim ve birlikte yorumlayalım.
         </p>
       </header>
