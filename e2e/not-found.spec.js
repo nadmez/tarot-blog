@@ -1,12 +1,11 @@
 import { expect, test } from "@playwright/test";
 
 // Every route linked from the header, footer, hero and recent posts.
-// None of these pages are built yet, so each must fall through to the
+// None of these pages are built yet (/tarot is built, so it is not listed), so each must fall through to the
 // custom "Sayfa yapım aşamasında" not-found page.
 const UNBUILT_ROUTES = [
   "/hakkinda",
   "/hakkinda/yaklasimim",
-  "/tarot",
   "/tarot/tavsiyeler",
   "/tarot/anlamlar",
   "/tarot/acilimlar",
@@ -79,6 +78,7 @@ test.describe("not-found page details", () => {
   test("keeps the site header and footer around the content", async ({
     page,
   }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
     await expect(page.getByRole("banner")).toBeVisible();
     await expect(
       page.getByRole("navigation", { name: "Ana menü" })
@@ -98,6 +98,7 @@ test.describe("not-found page details", () => {
   });
 
   test("can be left through the header navigation", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
     await page
       .getByRole("navigation", { name: "Ana menü" })
       .getByRole("link", { name: "Ana Sayfa", exact: true })

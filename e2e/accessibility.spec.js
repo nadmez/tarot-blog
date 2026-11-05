@@ -20,6 +20,7 @@ for (const { name, path } of PAGES) {
     });
 
     test("labels every navigation landmark", async ({ page }) => {
+      await page.setViewportSize({ width: 1280, height: 800 });
       const navs = page.getByRole("navigation");
       const count = await navs.count();
       expect(count).toBeGreaterThanOrEqual(2);
@@ -65,6 +66,7 @@ test.describe("keyboard navigation", () => {
   test("dropdown toggle opens with Enter and Space from the keyboard", async ({
     page,
   }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto("/");
     await page.waitForLoadState("networkidle");
     const nav = page.getByRole("navigation", { name: "Ana menü" });

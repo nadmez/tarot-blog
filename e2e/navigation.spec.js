@@ -21,6 +21,8 @@ const ABOUT_CHILDREN = [
 ];
 
 test.describe("desktop header", () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
+
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
