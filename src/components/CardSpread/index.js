@@ -1,7 +1,7 @@
 import { QuestionIcon } from "../icons";
 
 const PLACEHOLDER_COUNT = 3;
-const CARD_SLOT = "w-24 sm:w-32 md:w-40";
+const CARD_SLOT = "w-18 sm:w-24 md:w-30";
 
 export default function CardSpread({ cards = [] }) {
   const hasCards = cards.length > 0;
@@ -9,7 +9,7 @@ export default function CardSpread({ cards = [] }) {
   return (
     <section
       aria-label="Çekilen kartlar"
-      className="rounded-3xl border border-accent/30 bg-accent/5 px-4 py-6"
+      className="rounded-3xl border border-accent/30 bg-accent/5 px-4 py-4.5"
     >
       <ul className="flex items-start justify-center gap-4 sm:gap-6">
         {hasCards
@@ -34,7 +34,7 @@ export default function CardSpread({ cards = [] }) {
               <li key={index} className={CARD_SLOT}>
                 <div className="flex aspect-[2/3.5] w-full items-center justify-center rounded-xl border-2 border-dashed border-accent/50 bg-white/60">
                   <QuestionIcon
-                    className="h-10 w-10 animate-pulse text-accent/70"
+                    className="size-7.5 animate-pulse text-accent/70"
                     aria-hidden="true"
                   />
                   <span className="sr-only">Kart henüz çekilmedi</span>
